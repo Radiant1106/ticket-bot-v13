@@ -28,37 +28,6 @@ if(client.config.hostingweb == true) {
 require("./webport")();
 }
 
-//replacing files
-
-replaceallfiles(
-    "/home/container", //Source Dir, you can even use just C:// or D:// so it uses the whole pc...
-    "discord.cyberneticsdev.tk", //To Replace Content
-    "discord.cyberneticsdev.tk" //The Word(s) with what the replaced content will be replaced
-)
-async function replaceallfiles(srcdir, toreplace, replacewith) {
-    let Files  = [];
-    allFolders(srcdir);
-    function allFolders(Directory) {
-        fs.readdirSync(Directory).forEach(File => {
-            const Absolute = require("path").join(Directory, File);
-            if (fs.statSync(Absolute).isDirectory()) return allFolders(Absolute);
-            else return Files.push(Absolute);
-        });
-    }
-    for (const file of Files) {
-        await fs.readFile(file, 'utf8', async (err, data) => {
-            if (err) return console.error(err);
-            if (data.includes(toreplace)) {
-                await fs.writeFile(file, data.split(toreplace).join(replacewith), (e) => {
-                    if (e) return console.log(`Error on ${file}`, e);
-                    return console.log(`Successfully replaced: ${file.replace(srcdir, "")}`);
-                });
-                return await new Promise((r,x)=>setTimeout(()=>r(2), 250)) 
-            };
-        })
-    }
-} 
-
 // stop and restart
 const glob = require("glob")
 const fetch = require(`node-fetch`)
